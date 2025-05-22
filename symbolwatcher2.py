@@ -21,8 +21,8 @@ UPDATE_INTERVAL = 60  # Update prices every 60 seconds
 
 
 # Plot colours
-OPEN_COLOUR = "red"
-CLOSE_COLOUR = "green"
+OPEN_COLOUR = "green"
+CLOSE_COLOUR = "red"
 HILO_INT_COLOUR = "orange"
 CLOSE_OPEN_INT_COLOUR = "red"
 VOLUME_COLOUR = "grey"
@@ -45,7 +45,7 @@ class Tickersymbol():
         self.symbol = symbol      # Store the Symbol
         self.quantity = quantity  # Store the quantity
         self.value = value        # Store the value
-        self.history = stock.history()
+        self.history = stock.history(period=PERIOD, interval=INTERVAL)
         self.datetime = self.history.index
         self.close = self.history["Close"]
         self.open = self.history["Open"]
