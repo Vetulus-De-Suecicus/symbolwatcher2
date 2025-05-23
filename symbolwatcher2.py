@@ -1,6 +1,6 @@
 from textual.app import App, ComposeResult  # Import base classes for Textual apps
 from textual.widgets import Footer, Header, Digits, Button, LoadingIndicator  # Import UI widgets
-from textual.containers import VerticalScroll
+from textual.containers import VerticalScroll, HorizontalGroup
 import yfinance as yf  # Import yfinance for fetching stock data
 import re
 from textual_plotext import PlotextPlot
@@ -9,7 +9,9 @@ HOLDINGS = {
     "SAAB-B.ST": [1, 500],
     "SSAB-B.ST": [1, 500],
     "^OMX": [0, 0],
-    "MSFT": [1, 500]
+    "MSFT": [1, 500],
+    "AAPL": [0, 0],
+    "AMZN": [0,1]
 }
 
 PERIOD = "1d"
@@ -55,22 +57,18 @@ class SymbolWatcher2(App):
         self.ticker_widgets = {}
         self.plot_widget = None  # Will hold the PlotextPlot widget
 
-    CSS = """
-    PlotextPlot {
-        height: 20;
-    }
-"""
+    CSS_PATH = "style.tcss"
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with VerticalScroll():
+        with HorizontalGroup():
             for idx, ticker in enumerate(HOLDINGS.keys()):
                 yield Button(ticker, id=f"ticker{idx}")
                 price_widget = TickerClosedPrice("...")
                 self.ticker_widgets[ticker] = price_widget
                 yield price_widget
-            self.plot_widget = PlotextPlot(id="plot")
-            yield self.plot_widget  # Add the plot widget to the UI
+        self.plot_widget = PlotextPlot(id="plot")
+        yield self.plot_widget  # Add the plot widget to the UI
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
